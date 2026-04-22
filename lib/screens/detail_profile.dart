@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_testing/models/profile.dart';
 import 'package:flutter_testing/screens/edit_profile.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class DetailProfile extends StatefulWidget {
   const DetailProfile({super.key, required this.profile});
@@ -73,8 +72,7 @@ class _DetailProfileState extends State<DetailProfile> {
             ),
             SizedBox(height: 32),
             ElevatedButton(
-              onPressed: () async {
-                await Fluttertoast.showToast(msg: "Going back...");
+              onPressed: () {
                 Navigator.pop(context, widget.profile);
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
