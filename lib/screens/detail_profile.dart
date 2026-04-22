@@ -73,14 +73,6 @@ class _DetailProfileState extends State<DetailProfile> {
             ),
             SizedBox(height: 32),
             ElevatedButton(
-              onPressed: () {
-                Fluttertoast.showToast(msg: "Tombol ini belum berfungsi");
-              },
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-              child: const Text('Ubah Warna'),
-            ),
-            const SizedBox(height: 32),
-            ElevatedButton(
               onPressed: () async {
                 await Fluttertoast.showToast(msg: "Going back...");
                 Navigator.pop(context, widget.profile);

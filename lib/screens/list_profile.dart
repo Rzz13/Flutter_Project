@@ -56,7 +56,7 @@ class _ListProfileState extends State<ListProfile> {
               subtitle: Text(profile.bio),
               trailing: Text("NIM: ${profile.nim60}"),
               onTap: () async {
-                final updatedProfile = await Navigator.push<Profile>(
+                final updatedProfile = await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => DetailProfile(profile: profile),
