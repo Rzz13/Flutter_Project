@@ -20,15 +20,15 @@ class _ListProfileState extends State<ListProfile> {
           id: lastIndex + 1,
           name: "Muhamad Rizqi ${lastIndex + 1}",
           bio: "Flutter Developer",
-          nim60: 60,
+          nim60: 60 + lastIndex + 1,
         ),
       );
     });
   }
 
-  void deleteItem(int index) {
+  void deleteItem(int id) {
     setState(() {
-      profiles.removeAt(index);
+      profiles.removeWhere((profile) => profile.id == id);
     });
   }
 
@@ -41,11 +41,10 @@ class _ListProfileState extends State<ListProfile> {
         itemBuilder: (context, index) {
           final profile = profiles[index];
           return Dismissible(
-            key: Key(index.toString()),
+            key: Key(profile.id.toString()),
             onDismissed: (direction) {
-              final deletedItem = profiles[index];
-              deleteItem(index);
-              Fluttertoast.showToast(msg: "${deletedItem.name} dihapus");
+              deleteItem(profile.id);
+              Fluttertoast.showToast(msg: "${profile.name} dihapus");
             },
             child: ListTile(
               leading: CircleAvatar(

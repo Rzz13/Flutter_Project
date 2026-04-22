@@ -41,8 +41,8 @@ class _DetailProfileState extends State<DetailProfile> {
                     top: 110,
                     child: CircleAvatar(
                       radius: 80,
-                      backgroundImage: AssetImage(
-                        "assets/images/background2.jpg",
+                      backgroundImage: NetworkImage(
+                        "https://i.pravatar.cc/150?img=${widget.profile.id}",
                       ),
                     ),
                   ),
@@ -54,6 +54,10 @@ class _DetailProfileState extends State<DetailProfile> {
               style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
+            Text(
+              "NIM: ${widget.profile.nim60}",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
+            ),
             Text(
               widget.profile.bio,
               style: TextStyle(fontSize: 28, fontWeight: FontWeight.w100),
@@ -97,6 +101,7 @@ class _DetailProfileState extends State<DetailProfile> {
                   setState(() {
                     widget.profile.name = updatedProfile.name;
                     widget.profile.bio = updatedProfile.bio;
+                    widget.profile.nim60 = updatedProfile.nim60;
                   });
 
                   Navigator.pop(context, updatedProfile);
