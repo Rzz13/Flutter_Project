@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_testing/models/profile.dart';
-import 'package:flutter_testing/screens/detail_profile.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key, required this.profile});
@@ -68,13 +68,10 @@ class _EditProfileState extends State<EditProfile> {
                           bio: _bioController.text,
                           nim60: int.parse(_nimController.text),
                         );
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                DetailProfile(profile: updatedProfile),
-                          ),
+                        Fluttertoast.showToast(
+                          msg: "Profile updated successfully",
                         );
+                        Navigator.pop(context, updatedProfile);
                       }
                     },
                     child: const Text('Save'),

@@ -20,7 +20,7 @@ class _ListProfileState extends State<ListProfile> {
           id: lastIndex + 1,
           name: "Muhamad Rizqi ${lastIndex + 1}",
           bio: "Flutter Developer",
-          nim60: 60 + lastIndex + 1,
+          nim60: 601 + lastIndex + 1,
         ),
       );
     });
@@ -54,12 +54,21 @@ class _ListProfileState extends State<ListProfile> {
               ),
               title: Text(profile.name),
               subtitle: Text(profile.bio),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DetailProfile(profile: profile),
-                ),
-              ),
+              trailing: Text("NIM: ${profile.nim60}"),
+              onTap: () async {
+                final updatedProfile = await Navigator.push<Profile>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailProfile(profile: profile),
+                  ),
+                );
+
+                if (updatedProfile != null) {
+                  setState(() {
+                    profiles[index] = updatedProfile;
+                  });
+                }
+              },
             ),
           );
         },

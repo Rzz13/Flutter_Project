@@ -81,8 +81,9 @@ class _DetailProfileState extends State<DetailProfile> {
             ),
             const SizedBox(height: 32),
             ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
+              onPressed: () async {
+                await Fluttertoast.showToast(msg: "Going back...");
+                Navigator.pop(context, widget.profile);
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
               child: const Text('Go Back'),
@@ -103,8 +104,6 @@ class _DetailProfileState extends State<DetailProfile> {
                     widget.profile.bio = updatedProfile.bio;
                     widget.profile.nim60 = updatedProfile.nim60;
                   });
-
-                  Navigator.pop(context, updatedProfile);
                 }
               },
               child: const Text('Edit Profile'),
