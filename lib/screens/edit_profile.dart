@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_testing/models/profile.dart';
+import 'package:flutter_testing/provider/profile_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({super.key, required this.profile});
+  const EditProfile({super.key, required this.id});
 
-  final Profile profile;
+  final int id;
 
   @override
   State<EditProfile> createState() => _EditProfileState();
@@ -16,13 +19,22 @@ class _EditProfileState extends State<EditProfile> {
   late TextEditingController _nameController;
   late TextEditingController _bioController;
   late TextEditingController _nimController;
+  late TextEditingController _coverPhotoController;
+  late TextEditingController _profilePhotoController;
+
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.profile.name);
-    _bioController = TextEditingController(text: widget.profile.bio);
-    _nimController = TextEditingController(
-      text: widget.profile.nim60.toString(),
+
+    final provider = context.read<ProfileProvider>();
+    final profile = provider.getById(widget.id);
+
+    _nameController = TextEditingController(text: profile?.name);
+    _bioController = TextEditingController(text: profile?.bio);
+    _nimController = TextEditingController(text: profile?.nim60.toString());
+    _coverPhotoController = TextEditingController(text: profile?.coverPhoto);
+    _profilePhotoController = TextEditingController(
+      text: profile?.profilePhoto,
     );
   }
 
@@ -31,7 +43,20 @@ class _EditProfileState extends State<EditProfile> {
     _nameController.dispose();
     _bioController.dispose();
     _nimController.dispose();
+    _coverPhotoController.dispose();
+    _profilePhotoController.dispose();
     super.dispose();
+  }
+
+  Future<void> pickCoverPhoto(ImageSource source) async {
+    final picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: source);
+
+    if (image != null) {
+      setState(() {
+        _coverPhotoController.text = image.path;
+      });
+    }
   }
 
   @override
@@ -63,10 +88,12 @@ class _EditProfileState extends State<EditProfile> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         final updatedProfile = Profile(
-                          id: widget.profile.id,
+                          id: widget.id,
                           name: _nameController.text,
                           bio: _bioController.text,
                           nim60: int.parse(_nimController.text),
+                          coverPhoto: _coverPhotoController.text,
+                          profilePhoto: _profilePhotoController.text,
                         );
                         Fluttertoast.showToast(
                           msg: "Profile updated successfully",

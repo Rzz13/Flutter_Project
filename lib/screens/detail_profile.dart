@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_testing/models/profile.dart';
+import 'package:flutter_testing/provider/profile_provider.dart';
 import 'package:flutter_testing/screens/edit_profile.dart';
+import 'package:provider/provider.dart';
 
-class DetailProfile extends StatefulWidget {
-  const DetailProfile({super.key, required this.profile});
+class DetailProfile extends StatelessWidget {
+  const DetailProfile({super.key, required this.profileId});
 
-  final Profile profile;
+  final int profileId;
 
-  @override
-  State<DetailProfile> createState() => _DetailProfileState();
-}
-
-class _DetailProfileState extends State<DetailProfile> {
   @override
   Widget build(BuildContext context) {
+    final provider = context.read<ProfileProvider>();
+
+    final profile = provider.profiles.firstWhere((p) => p.id == profileId);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detail Profile'),
@@ -41,25 +42,45 @@ class _DetailProfileState extends State<DetailProfile> {
                     child: CircleAvatar(
                       radius: 80,
                       backgroundImage: NetworkImage(
-                        "https://i.pravatar.cc/150?img=${widget.profile.id}",
+                        "https://i.pravatar.cc/150?img=${profile.id}",
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            Text(
-              widget.profile.name,
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            Text(
-              "NIM: ${widget.profile.nim60}",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
-            ),
-            Text(
-              widget.profile.bio,
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.w100),
+            Consumer<ProfileProvider>(
+              builder: (context, provider, child) {
+                final profile = provider.profiles.firstWhere(
+                  (p) => p.id == profileId,
+                );
+                return Column(
+                  children: [
+                    Text(
+                      profile.name,
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      "NIM: ${profile.nim60}",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                    Text(
+                      profile.bio,
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w100,
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
             SizedBox(height: 16),
             Padding(
@@ -73,7 +94,7 @@ class _DetailProfileState extends State<DetailProfile> {
             SizedBox(height: 32),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context, widget.profile);
+                Navigator.pop(context, profileId);
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
               child: const Text('Go Back'),
@@ -84,16 +105,19 @@ class _DetailProfileState extends State<DetailProfile> {
                 final Profile? updatedProfile = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => EditProfile(profile: widget.profile),
+                    builder: (context) => EditProfile(id: profileId),
                   ),
                 );
 
                 if (updatedProfile != null) {
-                  setState(() {
-                    widget.profile.name = updatedProfile.name;
-                    widget.profile.bio = updatedProfile.bio;
-                    widget.profile.nim60 = updatedProfile.nim60;
-                  });
+                  final provider = context.read<ProfileProvider>();
+
+                  final index = provider.profiles.indexWhere(
+                    (p) => p.id == profileId,
+                  );
+                  if (index != -1) {
+                    provider.updateProfile(updatedProfile);
+                  }
                 }
               },
               child: const Text('Edit Profile'),
